@@ -7,6 +7,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] WaveConfig[] waves;
     [SerializeField] float timeToStart = 1.5f;
     [SerializeField] float timeBetweenWaves = 3f;
+    [SerializeField] bool shouldLoop = false;
 
     int activeTargets = 0;
     int activeWave = 0;
@@ -23,11 +24,15 @@ public class WaveManager : MonoBehaviour
     IEnumerator SpawnWave(WaveConfig wave) {
         Target[] targets = wave.GetTargets();
         activeTargets = targets.Length;
-        foreach (Target targetPre in targets) {
+        for(int idx = 0; idx < targets.Length; idx++) { 
             List<Transform> wayPoints = wave.GetWaypoints();
-            Target target = Instantiate(targetPre, wayPoints[0].position, wayPoints[0].rotation);
+            Vector3 startingPosition = wayPoints[0].position;
+            // Set z to index so newer targets will be behind older ones in the case they overlap
+            startingPosition.z = idx;
+            Target target = Instantiate(targets[idx], startingPosition, wayPoints[0].rotation);
             target.SetWaveConfig(wave);
             target.OnTargetEscaped += HandleTargetHiddenOrDestroyed;
+            target.OnTargetShot += HandleTargetHiddenOrDestroyed;
             yield return new WaitForSeconds(wave.GetTimeBetweenTargets());
         }
     }
@@ -35,9 +40,11 @@ public class WaveManager : MonoBehaviour
     void HandleTargetHiddenOrDestroyed() {
         activeTargets--;
         if(activeTargets == 0) {
-            print("Wave completed!");
             if(activeWave < waves.Length-1) {
                 activeWave++;
+                StartCoroutine(DelayedSpawn(waves[activeWave]));
+            } else if(shouldLoop) {
+                activeWave = 0;
                 StartCoroutine(DelayedSpawn(waves[activeWave]));
             }
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    //public static Action OnTargetDestroyed;
+    public Action OnTargetShot;
     public Action OnTargetEscaped;
 
     public WaveConfig waveConfig;
@@ -14,8 +14,9 @@ public class Target : MonoBehaviour
 
 
     private void Update() {
-        if(waveConfig != null && !deadOrEscaped)
+        if (waveConfig != null && !deadOrEscaped) {
             Move();
+        }
     }
 
     void Move() {
@@ -27,14 +28,25 @@ public class Target : MonoBehaviour
             if(OnTargetEscaped != null) {
                 OnTargetEscaped.Invoke();
             }
-        } else {
-            transform.position = Vector2.MoveTowards(transform.position, wayPoints[wayPointIndex].position, waveConfig.GetSpeed() * Time.deltaTime);
+            Destroy(gameObject);
+        }
+        else {
+            Vector3 wayPointWithMyZ = wayPoints[wayPointIndex].position;
+            wayPointWithMyZ.z = transform.position.z;
+            transform.position = Vector3.MoveTowards(transform.position, wayPointWithMyZ, waveConfig.GetSpeed() * Time.deltaTime);
         }
     }
 
     public void SetWaveConfig(WaveConfig waveConfig) {
         this.waveConfig = waveConfig;
         wayPoints = waveConfig.GetWaypoints();
+    }
+
+    public void TargetShot() {
+        if(OnTargetShot != null) {
+            OnTargetShot.Invoke();
+        }
+        Destroy(gameObject);
     }
 
     
