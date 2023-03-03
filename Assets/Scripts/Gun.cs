@@ -2,12 +2,20 @@ using System.Collections;
 using System;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
-{
+public class Gun : MonoBehaviour {
+
     [SerializeField]
-    float weaponCooldown = 0.5f;
+    Texture2D crosshair;
+
+    [SerializeField]
+    float weaponCooldown = 0.4f;
 
     bool canFire = true;
+
+    private void Start() {
+        Cursor.SetCursor(crosshair, new Vector2(crosshair.width / 2, crosshair.height / 2), CursorMode.Auto);
+        
+    }
 
     // Update is called once per frame
     void Update()

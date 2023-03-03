@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    public Action OnTargetShot;
+    [SerializeField]
+    bool isFriendly = false;
+
+    [SerializeField]
+    int points = 500;
+
+    public Action<Target> OnTargetShot;
     public Action OnTargetEscaped;
 
     public WaveConfig waveConfig;
@@ -37,6 +43,14 @@ public class Target : MonoBehaviour
         }
     }
 
+    public bool GetIsFriendly() {
+        return isFriendly;
+    }
+
+    public int GetPoints() {
+        return points;
+    }
+
     public void SetWaveConfig(WaveConfig waveConfig) {
         this.waveConfig = waveConfig;
         wayPoints = waveConfig.GetWaypoints();
@@ -44,7 +58,7 @@ public class Target : MonoBehaviour
 
     public void TargetShot() {
         if(OnTargetShot != null) {
-            OnTargetShot.Invoke();
+            OnTargetShot.Invoke(this);
         }
         Destroy(gameObject);
     }

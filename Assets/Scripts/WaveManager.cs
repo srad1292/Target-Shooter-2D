@@ -12,6 +12,9 @@ public class WaveManager : MonoBehaviour
     int activeTargets = 0;
     int activeWave = 0;
 
+    int gameScore = 0;
+    int streak = 0;
+
     private void Start() {
         StartCoroutine(RestartGame());    
     }
@@ -31,13 +34,31 @@ public class WaveManager : MonoBehaviour
             startingPosition.z = idx;
             Target target = Instantiate(targets[idx], startingPosition, wayPoints[0].rotation);
             target.SetWaveConfig(wave);
-            target.OnTargetEscaped += HandleTargetHiddenOrDestroyed;
-            target.OnTargetShot += HandleTargetHiddenOrDestroyed;
+            target.OnTargetEscaped += HandleTargetEscaped;
+            target.OnTargetShot += HandleTargetShot;
             yield return new WaitForSeconds(wave.GetTimeBetweenTargets());
         }
     }
 
-    void HandleTargetHiddenOrDestroyed() {
+
+    void HandleTargetEscaped() {
+        streak = 0;
+        // TODO: multiplier back to 1
+        FinishHandleTargetEscapedOrDestroyed();
+    }
+
+    void HandleTargetShot(Target target) {
+        // Add points to total points
+        gameScore += target.GetPoints();
+        print(gameScore);
+        // Add 1 to current streak
+        streak = target.GetIsFriendly() ? 0 : streak + 1;
+        print(streak);
+        // TODO: If reached multiple of X, update multiplier
+        FinishHandleTargetEscapedOrDestroyed();
+    }
+
+    void FinishHandleTargetEscapedOrDestroyed() {
         activeTargets--;
         if(activeTargets == 0) {
             if(activeWave < waves.Length-1) {

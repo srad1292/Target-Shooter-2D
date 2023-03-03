@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c0c979cf8680fa4b8da8c99726ab565, type: 3}
-  m_Name: Wave02
+  m_Name: Wave03
   m_EditorClassIdentifier: 
-  path: {fileID: 7780217703590234451, guid: 9dd42c4d35494b145a89897713d5366f, type: 3}
+  path: {fileID: 5943731584185784214, guid: a87c38228eb50a34786f766bc681806b, type: 3}
   targets:
   - {fileID: 72243847047983134, guid: f2c2dcfb7219a144b8755fc656035dac, type: 3}
   - {fileID: 72243847047983134, guid: f2c2dcfb7219a144b8755fc656035dac, type: 3}
-  - {fileID: 72243847047983134, guid: 3804997952ca12146a14fbce3cd00811, type: 3}
   - {fileID: 72243847047983134, guid: f2c2dcfb7219a144b8755fc656035dac, type: 3}
-  - {fileID: 72243847047983134, guid: f2c2dcfb7219a144b8755fc656035dac, type: 3}
-  speed: 6
-  timeBetweenTargets: 0.5
+  speed: 7
+  timeBetweenTargets: 1.5
