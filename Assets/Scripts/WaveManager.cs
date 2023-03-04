@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+    [SerializeField] GameManager gameManager;
     [SerializeField] WaveConfig[] waves;
     [SerializeField] float timeToStart = 1.5f;
     [SerializeField] float timeBetweenWaves = 3f;
@@ -11,9 +12,6 @@ public class WaveManager : MonoBehaviour
 
     int activeTargets = 0;
     int activeWave = 0;
-
-    int gameScore = 0;
-    int streak = 0;
 
     private void Start() {
         StartCoroutine(RestartGame());    
@@ -42,19 +40,12 @@ public class WaveManager : MonoBehaviour
 
 
     void HandleTargetEscaped() {
-        streak = 0;
-        // TODO: multiplier back to 1
+        gameManager.HandleTargetEscaped();
         FinishHandleTargetEscapedOrDestroyed();
     }
 
     void HandleTargetShot(Target target) {
-        // Add points to total points
-        gameScore += target.GetPoints();
-        print(gameScore);
-        // Add 1 to current streak
-        streak = target.GetIsFriendly() ? 0 : streak + 1;
-        print(streak);
-        // TODO: If reached multiple of X, update multiplier
+        gameManager.HandleTargetShot(target);
         FinishHandleTargetEscapedOrDestroyed();
     }
 

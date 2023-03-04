@@ -4,31 +4,31 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    SpriteRenderer scoreThousands;
-
-    [SerializeField]
-    SpriteRenderer scoreHundreds;
-
-    [SerializeField]
-    SpriteRenderer scoreTens;
-
-    [SerializeField]
-    SpriteRenderer scoreOnes;
-
-    [SerializeField]
-    bool useShadowed = false;
+    [SerializeField] NumberDisplayManager hud;
     
-    NumberDisplayManager numberDisplayManager;
-
-
+    int gameScore = 0;
+    int streak = 0;
 
     private void Start() {
-        numberDisplayManager = GetComponent<NumberDisplayManager>();
-        Sprite zeroSprite = useShadowed ? numberDisplayManager.GetShadowedNumberSprite(0) : numberDisplayManager.GetNumberSprite(0);
-        scoreThousands.sprite = zeroSprite;
-        scoreHundreds.sprite = zeroSprite;
-        scoreTens.sprite = zeroSprite;
-        scoreOnes.sprite = zeroSprite;
+        hud.ResetScoreDisplay();
     }
+
+    public void HandleTargetShot(Target target) {
+        AddToScore(target.GetPoints());
+
+        streak = target.GetIsFriendly() ? 0 : streak + 1;
+        print(streak);
+        // TODO: If reached multiple of X, update multiplier
+    }
+
+    public void HandleTargetEscaped() {
+        streak = 0;
+    }
+
+
+    private void AddToScore(int value) {
+        gameScore += value;
+        hud.UpdateScoreDisplay(gameScore);
+    }
+
 }
