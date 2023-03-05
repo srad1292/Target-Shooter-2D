@@ -4,25 +4,20 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour {
 
-    [SerializeField]
-    Texture2D crosshair;
-
-    [SerializeField]
-    float weaponCooldown = 0.4f;
-
+    [SerializeField] Texture2D crosshair;
+    [SerializeField] float weaponCooldown = 0.4f;
     [SerializeField] float reloadTime = 1.1f;
+    [SerializeField] NumberDisplayManager hud;
+    [SerializeField] int clipSize = 8;
 
-    [SerializeField]
-    NumberDisplayManager hud;
-
-    [SerializeField]
-    int clipSize = 8;
+    GunSounds gunSounds;
 
     bool canFire = true;
     bool reloading = false;
     int ammo;
 
     private void Start() {
+        gunSounds = GetComponent<GunSounds>();
         Cursor.SetCursor(crosshair, new Vector2(crosshair.width / 2, crosshair.height / 2), CursorMode.Auto);
         ammo = clipSize;
         hud.UpdateAmmoDisplay(ammo);
@@ -32,6 +27,8 @@ public class Gun : MonoBehaviour {
     {
         if(Input.GetMouseButtonDown(0) && canFire && !reloading) {
             FireWeapon();
+        } else if(Input.GetMouseButtonDown(0) && !canFire) {
+            gunSounds.GunCooldown();
         }
         else if((Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space)) && !reloading) {
             StartCoroutine(Reload());
@@ -39,6 +36,7 @@ public class Gun : MonoBehaviour {
     }
 
     private void FireWeapon() {
+        gunSounds.GunFired();
         canFire = false;
         ammo--;
         hud.UpdateAmmoDisplay(ammo);
@@ -61,6 +59,7 @@ public class Gun : MonoBehaviour {
     }
 
     IEnumerator Reload() {
+        gunSounds.GunReloading();
         reloading = true;
         yield return new WaitForSeconds(reloadTime);
         ammo = clipSize;

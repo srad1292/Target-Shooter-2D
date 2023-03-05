@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFriendly: 0
-  points: 100
+  points: 75
   waveConfig: {fileID: 0}
 --- !u!135 &-740162941943169338
 SphereCollider:
